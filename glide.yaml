@@ -1,0 +1,9 @@
+package: go-crud-rest-api
+import:
+- package: github.com/JonathanMH/goClacks
+  subpackages:
+  - echo
+- package: github.com/go-sql-driver/mysql
+- package: github.com/labstack/echo
+  subpackages:
+  - middleware
