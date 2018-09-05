@@ -1,41 +1,30 @@
 package main
 
 import (
-	_ "database/sql"
+	"flag"
 	"fmt"
-	"net/http"
+	"go-crud-rest-api/server/core"
 
-	"github.com/JonathanMH/goClacks/echo"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/Sirupsen/logrus"
 )
 
 func main() {
-	// Echo instance
-	e := echo.New()
-	e.Use(goClacks.Terrify) // optional ;)
+	path := flag.String("config", "", "App config file: -config=</path/to/config/file>")
+	flag.Parse()
+	fmt.Println("Config path: ", *path)
 
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	logger := logrus.New()
+	if path == nil || *path == "" {
+		logger.Fatal("Config file is reguired to start up the server!")
+	}
 
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
-	}))
+	server := core.BuildServer()
 
-	// Route => handler
-	e.GET("/", func(c echo.Context) error {
+	if err := server.Init(*path, logger); err != nil {
+		logger.Fatal(err)
+	}
 
-		return c.JSON(http.StatusOK, "Hi!")
-	})
-
-	e.GET("/id/:id", func(c echo.Context) error {
-		requestedID := c.Param("id")
-		fmt.Println(requestedID)
-		return c.JSON(http.StatusOK, requestedID)
-	})
-
-	e.Logger.Fatal(e.Start(":4000"))
+	if err := server.Run(); err != nil {
+		logger.Fatal(err)
+	}
 }
