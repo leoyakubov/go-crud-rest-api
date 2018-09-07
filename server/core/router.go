@@ -6,7 +6,7 @@ import (
 
 func (server *Server) setRoutes() {
 	server.Logger.Infoln("Initializing API...")
-	defer server.Logger.Infoln("Initializing API - done")
+	//defer server.Logger.Infoln("Initializing API - done")
 
 	api := server.Webserver.Group("/api")
 

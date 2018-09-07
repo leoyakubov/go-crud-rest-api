@@ -1,3 +1,3 @@
 #!/bin/bash   
-go run main.go -config=conf/application.yaml
 
+go run main.go -config=conf/application.yaml

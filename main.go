@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"go-crud-rest-api/server/core"
 
 	"github.com/Sirupsen/logrus"
@@ -11,9 +10,10 @@ import (
 func main() {
 	path := flag.String("config", "", "App config file: -config=</path/to/config/file>")
 	flag.Parse()
-	fmt.Println("Config path: ", *path)
 
 	logger := logrus.New()
+	logger.Infoln("Config path: ", *path)
+
 	if path == nil || *path == "" {
 		logger.Fatal("Config file is reguired to start up the server!")
 	}

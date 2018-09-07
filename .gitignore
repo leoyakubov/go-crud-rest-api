@@ -9,7 +9,7 @@ ehthumbs.db
 Thumbs.db
 
 # VS Code
-*.code-workspace
+*code-workspace
 
 # Logs
 *.log

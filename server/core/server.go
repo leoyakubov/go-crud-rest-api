@@ -65,9 +65,6 @@ func (server *Server) loadConfig(path string) error {
 }
 
 func (server *Server) initLogger(logger *logrus.Logger) error {
-	logger.Infoln("Initializing logger...")
-	defer logger.Infoln("Initializing logger - done")
-
 	file, err := os.OpenFile(server.Config.ServerLogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -81,10 +78,8 @@ func (server *Server) initLogger(logger *logrus.Logger) error {
 }
 
 func (server *Server) initWebserver() error {
-	server.Logger.Infoln("Initializing web engine...")
-	defer server.Logger.Infoln("Initializing web engine - done")
-
 	server.Webserver = echo.New()
+
 	server.setMiddleware()
 	server.setRoutes()
 
@@ -92,9 +87,8 @@ func (server *Server) initWebserver() error {
 }
 
 func (server *Server) setMiddleware() error {
-	//TODO set logrus output to .log file
+	server.Webserver.Use(config.CustomLoggerHandler("web", server.Logger))
 	server.Webserver.Use(middleware.Recover())
-
 	server.Webserver.Use(security.CORS())
 
 	return nil
@@ -102,7 +96,7 @@ func (server *Server) setMiddleware() error {
 
 func (server *Server) initDb() error {
 	server.Logger.Infoln("Initializing database...")
-	defer server.Logger.Infoln("Initializing database - done")
+	//defer server.Logger.Infoln("Initializing database - done")
 
 	db, err := repository.NewDb(server.Config)
 	if err != nil {
@@ -113,6 +107,7 @@ func (server *Server) initDb() error {
 
 	return nil
 }
+
 func (server *Server) initPersistenceProvider() error {
 	server.PersistenceProvider = repository.NewPersistenceProvider(server.DB)
 
