@@ -1,59 +1,186 @@
 package controller
 
 import (
-	"fmt"
 	"go-crud-rest-api/server/dto"
+	"go-crud-rest-api/server/errors"
+	"go-crud-rest-api/server/model"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo"
 )
 
-type TaskHandler struct {
+type TaskController struct {
 	BaseController
 }
 
-//TODO add logging on echa action
+func (tc *TaskController) AddTask(c echo.Context) error {
+	td := &dto.TaskDto{}
+	if err := c.Bind(td); err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
 
-func (bc *BaseController) AddTask(c echo.Context) error {
-	d := &dto.TaskDto{
-		ID: dto.Seq,
+	//TODO add dto -> model transformer
+	tm := &model.Task{
+		Title:       td.Title,
+		Description: td.Description,
+		Priority:    td.Priority,
+		CompletedAt: td.CompletedAt,
+		IsCompleted: td.IsCompleted,
 	}
-	if err := c.Bind(d); err != nil {
-		return err
+
+	err := tc.PersistenceProvider.TaskRepo().Add(tm)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
 	}
-	dto.Tasks[d.ID] = d
-	dto.Seq++
-	return c.JSON(http.StatusCreated, d)
+
+	return c.JSON(http.StatusCreated, tm)
+
 }
 
 func (bc *BaseController) GetTaskById(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
-	fmt.Println("id: ", id)
+	sid := c.Param("id")
+	id, err := strconv.Atoi(sid)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.INVALID_TASK_ID,
+		})
 	}
-	return c.JSON(http.StatusOK, dto.Tasks[id])
 
+	ts, err := bc.PersistenceProvider.TaskRepo().FindOneById(id)
+
+	if err == errors.ErrTaskNotFound {
+		return c.JSON(http.StatusNotFound, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.TASK_DOESNT_EXIST,
+		})
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
+
+	return c.JSON(http.StatusOK, ts)
 }
 
 func (bc *BaseController) GetAllTasks(c echo.Context) error {
-	return c.JSON(http.StatusOK, dto.Tasks)
+	ts, err := bc.PersistenceProvider.TaskRepo().FindAll()
 
+	if err == errors.ErrTaskNotFound {
+		return c.JSON(http.StatusNotFound, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.TASK_DOESNT_EXIST,
+		})
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
+
+	return c.JSON(http.StatusOK, ts)
 }
 
 func (bc *BaseController) UpdateTask(c echo.Context) error {
-	d := new(dto.TaskDto)
-	if err := c.Bind(d); err != nil {
-		return err
+	sid := c.Param("id")
+	id, err := strconv.Atoi(sid)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
 	}
-	id, _ := strconv.Atoi(c.Param("id"))
-	dto.Tasks[id].Name = d.Name
-	return c.JSON(http.StatusOK, dto.Tasks[id])
+
+	td := &dto.TaskDto{}
+	if err := c.Bind(td); err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
+
+	tm := &model.Task{
+		Title:       td.Title,
+		Description: td.Description,
+		Priority:    td.Priority,
+		CompletedAt: td.CompletedAt,
+		IsCompleted: td.IsCompleted,
+	}
+
+	res, err := bc.PersistenceProvider.TaskRepo().UpdateById(id, tm)
+
+	if err != nil {
+		if err == errors.ErrTaskNotFound {
+			return c.JSON(http.StatusNotFound, errors.ResponseError{
+				ErrorCodeId: 400,
+				DevMessage:  err.Error(),
+				UserMessage: errors.TASK_DOESNT_EXIST,
+			})
+		}
+
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
+
+	return c.JSON(http.StatusCreated, res)
 }
 
 func (bc *BaseController) DeleteTask(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	delete(dto.Tasks, id)
+	sid := c.Param("id")
+	id, err := strconv.Atoi(sid)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
+
+	err = bc.PersistenceProvider.TaskRepo().DeleteById(id)
+
+	if err == errors.ErrTaskNotFound {
+		return c.JSON(http.StatusNotFound, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.TASK_DOESNT_EXIST,
+		})
+
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+			ErrorCodeId: 400,
+			DevMessage:  err.Error(),
+			UserMessage: errors.ERR_OCCURED,
+		})
+	}
+
 	return c.NoContent(http.StatusNoContent)
 }

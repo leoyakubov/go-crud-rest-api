@@ -3,18 +3,24 @@ package core
 import (
 	"fmt"
 	"go-crud-rest-api/server/config"
+	"go-crud-rest-api/server/repository"
+	"go-crud-rest-api/server/security"
 	"os"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/jinzhu/gorm"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
 type Server struct {
-	Config    *config.Config
-	Logger    *logrus.Logger
-	Webserver *echo.Echo
+	Config              *config.Config
+	Logger              *logrus.Logger
+	Webserver           *echo.Echo
+	DB                  *gorm.DB
+	PersistenceProvider repository.IPersistenceProvider
 }
 
 func BuildServer() *Server {
@@ -24,6 +30,9 @@ func BuildServer() *Server {
 }
 
 func (server *Server) Init(path string, logger *logrus.Logger) error {
+	logger.Infoln("Initializing server...")
+	defer logger.Infoln("Initializing server - done")
+
 	if err := server.loadConfig(path); err != nil {
 		logger.Fatal(err)
 	}
@@ -32,7 +41,15 @@ func (server *Server) Init(path string, logger *logrus.Logger) error {
 		logger.Fatal(err)
 	}
 
-	if err := server.initWebServer(); err != nil {
+	if err := server.initDb(); err != nil {
+		logger.Fatal(err)
+	}
+
+	if err := server.initPersistenceProvider(); err != nil {
+		logger.Fatal(err)
+	}
+
+	if err := server.initWebserver(); err != nil {
 		logger.Fatal(err)
 	}
 
@@ -48,6 +65,9 @@ func (server *Server) loadConfig(path string) error {
 }
 
 func (server *Server) initLogger(logger *logrus.Logger) error {
+	logger.Infoln("Initializing logger...")
+	defer logger.Infoln("Initializing logger - done")
+
 	file, err := os.OpenFile(server.Config.ServerLogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -55,49 +75,51 @@ func (server *Server) initLogger(logger *logrus.Logger) error {
 	}
 
 	logger.SetOutput(file)
-	//logger.SetFormatter(&logger.Formatter.Format.
 
 	server.Logger = logger
 	return nil
 }
 
-func (server *Server) initWebServer() error {
-	// Echo instance
+func (server *Server) initWebserver() error {
+	server.Logger.Infoln("Initializing web engine...")
+	defer server.Logger.Infoln("Initializing web engine - done")
+
 	server.Webserver = echo.New()
-	//server.Webserver.Use(echologrus.NewWithNameAndLogger("web", a.logger))
-	server.SetRoutes()
-	server.seMiddleware()
+	server.setMiddleware()
+	server.setRoutes()
 
 	return nil
 }
 
-func (server *Server) seMiddleware() error {
-	//server.Webserver.Use(middleware.Logger())
+func (server *Server) setMiddleware() error {
+	//TODO set logrus output to .log file
 	server.Webserver.Use(middleware.Recover())
 
-	server.Webserver.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
-	}))
+	server.Webserver.Use(security.CORS())
+
 	return nil
 }
 
-func (server *Server) initHTTPLogger() error {
-	/*
-		file, err := os.OpenFile(s.Config.Server.HttpLogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+func (server *Server) initDb() error {
+	server.Logger.Infoln("Initializing database...")
+	defer server.Logger.Infoln("Initializing database - done")
 
-		if err != nil {
-			return fmt.Errorf("Error openning http log file %v", err)
-		}
+	db, err := repository.NewDb(server.Config)
+	if err != nil {
+		return err
+	}
 
-		gin.DefaultWriter = file
-	*/
+	server.DB = db
+
+	return nil
+}
+func (server *Server) initPersistenceProvider() error {
+	server.PersistenceProvider = repository.NewPersistenceProvider(server.DB)
 
 	return nil
 }
 
 func (server *Server) Run() error {
-	fmt.Println(server.Webserver)
 	if err := server.Webserver.Start(":4000"); err != nil {
 		return err
 	}

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/go-yaml/yaml"
@@ -13,6 +12,17 @@ import (
 type Config struct {
 	ServerLogFilePath string `yaml:"log_file_path"`
 	ListenAddress     string `yaml:"port"`
+
+	DBDialect           string `yaml:"db_dialect"`
+	DBUsername          string `yaml:"db_username"`
+	DBPassword          string `yaml:"db_password"`
+	DBName              string `yaml:"db_name"`
+	DBHostname          string `yaml:"db_host"`
+	DBParameters        string `yaml:"db_parameters"`
+	DBPort              int    `yaml:"db_port"`
+	DBProtocol          string `yaml:"db_protocol"`
+	DBGormSingularTable bool   `yaml:"db_gorm_singular_table"`
+	DBGormLogMode       bool   `yaml:"db_gorm_log_mode"`
 }
 
 func (conf *Config) Read(path string) error {
@@ -29,14 +39,12 @@ func (conf *Config) Read(path string) error {
 
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		return fmt.Errorf("could not read config: %s", err.Error())
+		return fmt.Errorf("Could not read config: %s", err.Error())
 	}
 
 	if err := yaml.Unmarshal(content, conf); err != nil {
-		return fmt.Errorf("could not parse yaml config file '%s': %s", path, err.Error())
+		return fmt.Errorf("Could not parse yaml config file '%s': %s", path, err.Error())
 	}
-
-	log.Println("Server config: ", *conf)
 
 	return nil
 }

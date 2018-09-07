@@ -1,11 +1,12 @@
 package dto
 
-type TaskDto struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
+import "time"
 
-var (
-	Tasks = map[int]*TaskDto{}
-	Seq   = 1
-)
+type TaskDto struct {
+	Title       string     `json:"title"`
+	Description *string    `json:"description"`
+	Priority    *int       `json:"priority"`
+	CompletedAt *time.Time `json:"completedAt"`
+	IsDeleted   bool       `json:"isDeleted"`
+	IsCompleted bool       `json:"isCompleted"`
+}

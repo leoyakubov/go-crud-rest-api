@@ -1,5 +1,5 @@
 hash: 4ded6cfecc7e0b43750f192da677640ac6d2dccff7f5e9915083a35548b36467
-updated: 2018-09-05T15:07:38.646621+03:00
+updated: 2018-09-07T14:59:44.101328+03:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: 0b96aaa707760d6ab28d9b9d1913ff5993328bae
@@ -7,6 +7,10 @@ imports:
   version: 99ff426eb706cffe92ff3d058e168b278cabf7c7
 - name: github.com/go-yaml/yaml
   version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
+- name: github.com/jinzhu/gorm
+  version: 32455088f24d6b1e9a502fb8e40fdc16139dbea8
+- name: github.com/jinzhu/inflection
+  version: 04140366298a54a039076d798123ffa108fff46c
 - name: github.com/JonathanMH/goClacks
   version: aa5286893e3c719c172357a8c53a19f28550073d
   subpackages:
@@ -29,7 +33,7 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 3791101e143bf0f32515ac23e831475684f61229
 - name: github.com/valyala/bytebufferpool
-  version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
+  version: cdfbe9377474227bb42120c1e22fd4433e7f69bf
 - name: github.com/valyala/fasttemplate
   version: dcecefd839c4193db0d35b88ec65b4c12d360ab0
 - name: golang.org/x/crypto
@@ -39,8 +43,12 @@ imports:
   - acme/autocert
   - ssh/terminal
 - name: golang.org/x/sys
-  version: ebe1bf3edb3325c393447059974de898d5133eb8
+  version: 8cf3aee429924738c56c34bb819c4ea8273fc434
   subpackages:
   - unix
   - windows
+- name: google.golang.org/appengine
+  version: 03cac3b07182cfb08c0d0c0b6ee72a1ceb151c92
+  subpackages:
+  - cloudsql
 testImports: []
