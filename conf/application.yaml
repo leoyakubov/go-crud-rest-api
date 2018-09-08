@@ -15,5 +15,5 @@ db_host: "localhost"
 db_port: 3306
 db_parameters: "?charset=utf8&parseTime=True&loc=Local"
 db_protocol: "tcp"
-db_gorm_singular_table: false
+db_gorm_singular_table: true
 db_gorm_log_mode: false
