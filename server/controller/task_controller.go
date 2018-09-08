@@ -2,8 +2,8 @@ package controller
 
 import (
 	"go-crud-rest-api/server/dto"
-	"go-crud-rest-api/server/errors"
 	"go-crud-rest-api/server/model"
+	"go-crud-rest-api/server/response"
 	"net/http"
 	"strconv"
 
@@ -17,10 +17,10 @@ type TaskController struct {
 func (tc *TaskController) AddTask(c echo.Context) error {
 	td := &dto.TaskDto{}
 	if err := c.Bind(td); err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
@@ -36,10 +36,10 @@ func (tc *TaskController) AddTask(c echo.Context) error {
 	err := tc.PersistenceProvider.TaskRepo().Add(tm)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
@@ -51,28 +51,28 @@ func (bc *BaseController) GetTaskById(c echo.Context) error {
 	sid := c.Param("id")
 	id, err := strconv.Atoi(sid)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.INVALID_TASK_ID,
+			ServerError: err.Error(),
+			UserMessage: response.INVALID_TASK_ID,
 		})
 	}
 
 	ts, err := bc.PersistenceProvider.TaskRepo().FindOneById(id)
 
-	if err == errors.ErrTaskNotFound {
-		return c.JSON(http.StatusNotFound, errors.ResponseError{
+	if err == response.ErrTaskNotFound {
+		return c.JSON(http.StatusNotFound, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.TASK_DOESNT_EXIST,
+			ServerError: err.Error(),
+			UserMessage: response.TASK_DOESNT_EXIST,
 		})
 	}
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
@@ -82,19 +82,19 @@ func (bc *BaseController) GetTaskById(c echo.Context) error {
 func (bc *BaseController) GetAllTasks(c echo.Context) error {
 	ts, err := bc.PersistenceProvider.TaskRepo().FindAll()
 
-	if err == errors.ErrTaskNotFound {
-		return c.JSON(http.StatusNotFound, errors.ResponseError{
+	if err == response.ErrTaskNotFound {
+		return c.JSON(http.StatusNotFound, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.TASK_DOESNT_EXIST,
+			ServerError: err.Error(),
+			UserMessage: response.TASK_DOESNT_EXIST,
 		})
 	}
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
@@ -106,19 +106,19 @@ func (bc *BaseController) UpdateTask(c echo.Context) error {
 	id, err := strconv.Atoi(sid)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
 	td := &dto.TaskDto{}
 	if err := c.Bind(td); err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
@@ -133,18 +133,18 @@ func (bc *BaseController) UpdateTask(c echo.Context) error {
 	res, err := bc.PersistenceProvider.TaskRepo().UpdateById(id, tm)
 
 	if err != nil {
-		if err == errors.ErrTaskNotFound {
-			return c.JSON(http.StatusNotFound, errors.ResponseError{
+		if err == response.ErrTaskNotFound {
+			return c.JSON(http.StatusNotFound, response.ResponseError{
 				ErrorCodeId: 400,
-				DevMessage:  err.Error(),
-				UserMessage: errors.TASK_DOESNT_EXIST,
+				ServerError: err.Error(),
+				UserMessage: response.TASK_DOESNT_EXIST,
 			})
 		}
 
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
@@ -156,29 +156,29 @@ func (bc *BaseController) DeleteTask(c echo.Context) error {
 	id, err := strconv.Atoi(sid)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 
 	err = bc.PersistenceProvider.TaskRepo().DeleteById(id)
 
-	if err == errors.ErrTaskNotFound {
-		return c.JSON(http.StatusNotFound, errors.ResponseError{
+	if err == response.ErrTaskNotFound {
+		return c.JSON(http.StatusNotFound, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.TASK_DOESNT_EXIST,
+			ServerError: err.Error(),
+			UserMessage: response.TASK_DOESNT_EXIST,
 		})
 
 	}
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.ResponseError{
+		return c.JSON(http.StatusInternalServerError, response.ResponseError{
 			ErrorCodeId: 400,
-			DevMessage:  err.Error(),
-			UserMessage: errors.ERR_OCCURED,
+			ServerError: err.Error(),
+			UserMessage: response.ERR_OCCURED,
 		})
 	}
 

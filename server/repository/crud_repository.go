@@ -2,7 +2,7 @@ package repository
 
 import (
 	"fmt"
-	"go-crud-rest-api/server/errors"
+	"go-crud-rest-api/server/response"
 
 	"github.com/jinzhu/gorm"
 )
@@ -24,6 +24,7 @@ func NewRepositiry(db *gorm.DB) *Repository {
 
 func (r *Repository) Add(add interface{}) error {
 	db := r.DB.Create(add)
+
 	if db.Error != nil {
 		return fmt.Errorf("En arror occured while adding new task %v", db.Error)
 	}
@@ -35,7 +36,7 @@ func (r *Repository) Update(upd interface{}, res interface{}, id int) error {
 	db := r.DB.Where(NOT_DELETED).First(res, id).Update(upd)
 
 	if db.RecordNotFound() {
-		return errors.ErrTaskNotFound
+		return response.ErrTaskNotFound
 	}
 
 	if db.Error != nil {
@@ -49,7 +50,7 @@ func (r *Repository) FindOneById(res interface{}, id int) (err error) {
 	db := r.DB.Where(NOT_DELETED).First(res, id)
 
 	if db.RecordNotFound() {
-		return errors.ErrTaskNotFound
+		return response.ErrTaskNotFound
 	}
 
 	return db.Error
@@ -67,7 +68,7 @@ func (r *Repository) Delete(res interface{}, id int) error {
 	db := r.DB.Where(NOT_DELETED).First(res, id).Update(IS_DELETED, true)
 
 	if db.RecordNotFound() {
-		return errors.ErrTaskNotFound
+		return response.ErrTaskNotFound
 	}
 
 	if db.Error != nil {

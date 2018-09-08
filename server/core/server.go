@@ -30,8 +30,8 @@ func BuildServer() *Server {
 }
 
 func (server *Server) Init(path string, logger *logrus.Logger) error {
-	logger.Infoln("Initializing server...")
-	defer logger.Infoln("Initializing server - done")
+	logger.Infoln("Starting server...")
+	defer logger.Infoln("Server started")
 
 	if err := server.loadConfig(path); err != nil {
 		logger.Fatal(err)
@@ -95,8 +95,7 @@ func (server *Server) setMiddleware() error {
 }
 
 func (server *Server) initDb() error {
-	server.Logger.Infoln("Initializing database...")
-	//defer server.Logger.Infoln("Initializing database - done")
+	server.Logger.Infoln("Connecting to the database...")
 
 	db, err := repository.NewDb(server.Config)
 	if err != nil {
@@ -115,7 +114,7 @@ func (server *Server) initPersistenceProvider() error {
 }
 
 func (server *Server) Run() error {
-	if err := server.Webserver.Start(":4000"); err != nil {
+	if err := server.Webserver.Start(server.Config.ListenAddress); err != nil {
 		return err
 	}
 

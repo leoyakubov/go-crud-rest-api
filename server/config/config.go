@@ -12,6 +12,7 @@ import (
 type Config struct {
 	ServerLogFilePath string `yaml:"log_file_path"`
 	ListenAddress     string `yaml:"port"`
+	JwtSecret         string `yaml:"jwt_secret"`
 
 	DBDialect           string `yaml:"db_dialect"`
 	DBUsername          string `yaml:"db_username"`

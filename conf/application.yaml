@@ -1,8 +1,7 @@
 # app
-app_name: GO CRUD RESTfull API
-version: 1.0.0
 log_file_path: "logs/server.log"
-port: ":4444"
+port: ":4000"
+jwt_secret: topsecret
 
 # database
 db_dialect: mysql

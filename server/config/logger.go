@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo"
 )
 
+// Meddleware for custom logging
 func CustomLoggerHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -24,7 +25,7 @@ func CustomLoggerHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc
 				entry = entry.WithField("request_id", reqID)
 			}
 
-			entry.Info("started handling request")
+			entry.Info("begin request")
 
 			if err := next(c); err != nil {
 				c.Error(err)
@@ -37,7 +38,7 @@ func CustomLoggerHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc
 				"text_status":                           http.StatusText(c.Response().Status),
 				"took":                                  latency,
 				fmt.Sprintf("measure#%s.latency", name): latency.Nanoseconds(),
-			}).Info("completed handling request")
+			}).Info("end request")
 
 			return nil
 		}
