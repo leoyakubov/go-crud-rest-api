@@ -24,8 +24,8 @@ func JwtAuthHandler(config middleware.JWTConfig) echo.MiddlewareFunc {
 			if len(header) <= l+1 || header[:l] != BEARER {
 				return c.JSON(http.StatusUnauthorized, response.ResponseError{
 					ErrorCodeId: 401,
-					ServerError: "JWT secret token is missed",
-					UserMessage: "Authentication has failed",
+					ServerError: response.JWT_MISSING,
+					UserMessage: response.INCORRECT_AUTH_TOKEN,
 				})
 			}
 
@@ -59,10 +59,10 @@ func JwtAuthHandler(config middleware.JWTConfig) echo.MiddlewareFunc {
 				return next(c)
 			}
 
-			return c.JSON(http.StatusUnauthorized, response.ResponseError{
-				ErrorCodeId: 401,
+			return c.JSON(http.StatusForbidden, response.ResponseError{
+				ErrorCodeId: 403,
 				ServerError: err.Error(),
-				UserMessage: "An error occured while user authorization",
+				UserMessage: response.FORBIDDEN,
 			})
 		}
 	}

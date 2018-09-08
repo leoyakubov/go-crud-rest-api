@@ -10,17 +10,20 @@ import (
 )
 
 type Config struct {
-	ServerLogFilePath string `yaml:"log_file_path"`
 	ListenAddress     string `yaml:"port"`
+	ServerLogFilePath string `yaml:"log_file_path"`
 	JwtSecret         string `yaml:"jwt_secret"`
+	FbAppId           string `yaml:"fb_appId"`
+	FbSecret          string `yaml:"fb_secret"`
+	FbCallbackURL     string `yaml:"fb_callbackURL"`
 
 	DBDialect           string `yaml:"db_dialect"`
 	DBUsername          string `yaml:"db_username"`
 	DBPassword          string `yaml:"db_password"`
 	DBName              string `yaml:"db_name"`
 	DBHostname          string `yaml:"db_host"`
-	DBParameters        string `yaml:"db_parameters"`
 	DBPort              int    `yaml:"db_port"`
+	DBParameters        string `yaml:"db_parameters"`
 	DBProtocol          string `yaml:"db_protocol"`
 	DBGormSingularTable bool   `yaml:"db_gorm_singular_table"`
 	DBGormLogMode       bool   `yaml:"db_gorm_log_mode"`

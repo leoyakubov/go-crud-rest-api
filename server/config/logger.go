@@ -25,7 +25,7 @@ func CustomLoggerHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc
 				entry = entry.WithField("request_id", reqID)
 			}
 
-			entry.Info("begin request")
+			entry.Info("<")
 
 			if err := next(c); err != nil {
 				c.Error(err)
@@ -38,7 +38,7 @@ func CustomLoggerHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc
 				"text_status":                           http.StatusText(c.Response().Status),
 				"took":                                  latency,
 				fmt.Sprintf("measure#%s.latency", name): latency.Nanoseconds(),
-			}).Info("end request")
+			}).Info(">")
 
 			return nil
 		}

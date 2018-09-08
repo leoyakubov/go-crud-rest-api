@@ -41,7 +41,7 @@ func (ah *AuthController) Login(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, response.ResponseError{
 				ErrorCodeId: 500,
 				ServerError: err.Error(),
-				UserMessage: "An error occured while user authorization",
+				UserMessage: response.ERR_OCCURED,
 			})
 		}
 		return c.JSON(http.StatusOK, map[string]string{
@@ -51,7 +51,7 @@ func (ah *AuthController) Login(c echo.Context) error {
 
 	return c.JSON(http.StatusUnauthorized, response.ResponseError{
 		ErrorCodeId: 401,
-		ServerError: "Username or password is invalid",
-		UserMessage: "Username or password is invalid",
+		ServerError: response.USERNAME_PASS_INCORRECT,
+		UserMessage: response.USERNAME_PASS_INCORRECT,
 	})
 }

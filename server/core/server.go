@@ -5,10 +5,15 @@ import (
 	"go-crud-rest-api/server/config"
 	"go-crud-rest-api/server/repository"
 	"go-crud-rest-api/server/security"
+	"net/http"
 	"os"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/gorilla/sessions"
 	"github.com/jinzhu/gorm"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/facebook"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
@@ -77,23 +82,6 @@ func (server *Server) initLogger(logger *logrus.Logger) error {
 	return nil
 }
 
-func (server *Server) initWebserver() error {
-	server.Webserver = echo.New()
-
-	server.setMiddleware()
-	server.setRoutes()
-
-	return nil
-}
-
-func (server *Server) setMiddleware() error {
-	server.Webserver.Use(config.CustomLoggerHandler("web", server.Logger))
-	server.Webserver.Use(middleware.Recover())
-	server.Webserver.Use(security.CORS())
-
-	return nil
-}
-
 func (server *Server) initDb() error {
 	server.Logger.Infoln("Connecting to the database...")
 
@@ -111,6 +99,38 @@ func (server *Server) initPersistenceProvider() error {
 	server.PersistenceProvider = repository.NewPersistenceProvider(server.DB)
 
 	return nil
+}
+
+func (server *Server) initWebserver() error {
+	server.Webserver = echo.New()
+
+	server.setMiddleware()
+	server.initOAuth()
+	server.setRoutes()
+
+	return nil
+}
+
+func (server *Server) setMiddleware() error {
+	server.Webserver.Use(config.CustomLoggerHandler("web", server.Logger))
+	server.Webserver.Use(middleware.Recover())
+	server.Webserver.Use(security.CORS())
+
+	return nil
+}
+
+func (server *Server) initOAuth() {
+	goth.UseProviders(facebook.New(
+		server.Config.FbAppId,
+		server.Config.FbSecret,
+		server.Config.FbCallbackURL),
+	)
+
+	gothic.GetProviderName = func(req *http.Request) (string, error) {
+		return "facebook", nil
+	}
+
+	gothic.Store = sessions.NewCookieStore([]byte(server.Config.FbSecret))
 }
 
 func (server *Server) Run() error {
