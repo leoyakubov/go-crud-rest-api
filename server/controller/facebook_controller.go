@@ -36,3 +36,13 @@ func (fc *FacebookController) FacebookCallback(c echo.Context) error {
 		"UserEmail":       user.Email,
 	})
 }
+
+func (bc *BaseController) AuthOptions(c echo.Context) error {
+	c.Request().Header.Add("Allow", "GET")
+	return c.JSON(http.StatusOK, "Allowed: GET /facebook")
+}
+
+func (bc *BaseController) CallbackOptions(c echo.Context) error {
+	c.Request().Header.Add("Allow", "GET")
+	return c.JSON(http.StatusOK, "Allowed: GET /facebook/callback")
+}

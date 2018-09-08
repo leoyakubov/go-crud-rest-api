@@ -31,6 +31,8 @@ func (server *Server) setRoutes() {
 	api.GET("/tasks", taskHandler.GetAllTasks)
 	api.PUT("/tasks/:id", taskHandler.UpdateTask)
 	api.DELETE("/tasks/:id", taskHandler.DeleteTask)
+	api.OPTIONS("/tasks", taskHandler.TaskOptions)
+	api.OPTIONS("/tasks/:id", taskHandler.TaskByIdOptions)
 
 	//Security controllers
 	authHandler := &controller.AuthController{}
@@ -42,4 +44,7 @@ func (server *Server) setRoutes() {
 	auth.POST("/login", authHandler.Login)
 	auth.GET("/facebook", fbHandler.FacebookAuth)
 	auth.GET("/facebook/callback", fbHandler.FacebookCallback)
+	auth.OPTIONS("/login", authHandler.LoginOptions)
+	auth.OPTIONS("/facebook", fbHandler.AuthOptions)
+	auth.OPTIONS("/facebook/callback", fbHandler.CallbackOptions)
 }

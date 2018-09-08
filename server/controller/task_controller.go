@@ -10,6 +10,17 @@ import (
 	"github.com/labstack/echo"
 )
 
+const (
+	TASK_OPTIONS = "Allowed: " +
+		"Get all tasks - GET /tasks \n" +
+		"Add Task - POST /tasks \n"
+
+	TASK_BY_ID_OPTIONS = "Allowed: \n" +
+		"Get task - GET /tasks/:id \n" +
+		"Update Task - PUT /tasks/:id \n" +
+		"Delete task - DELETE /tasks/:id \n"
+)
+
 type TaskController struct {
 	BaseController
 }
@@ -183,4 +194,15 @@ func (bc *BaseController) DeleteTask(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusNoContent)
+}
+
+func (bc *BaseController) TaskOptions(c echo.Context) error {
+	c.Request().Header.Add("Allow", "GET,POST")
+	//Send just some basic info about endpoint
+	return c.JSON(http.StatusOK, TASK_OPTIONS)
+}
+
+func (bc *BaseController) TaskByIdOptions(c echo.Context) error {
+	c.Request().Header.Add("Allow", "GET,PUT,DELETE")
+	return c.JSON(http.StatusOK, TASK_BY_ID_OPTIONS)
 }

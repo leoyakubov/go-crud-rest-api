@@ -55,3 +55,9 @@ func (ah *AuthController) Login(c echo.Context) error {
 		UserMessage: response.USERNAME_PASS_INCORRECT,
 	})
 }
+
+func (bc *BaseController) LoginOptions(c echo.Context) error {
+	c.Request().Header.Add("Allow", "POST")
+	//Send just some basic info about endpoint
+	return c.JSON(http.StatusOK, "Allowed: POST /login")
+}
