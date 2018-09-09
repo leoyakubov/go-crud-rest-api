@@ -20,6 +20,10 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
+const (
+	LOGS_DIR = "logs"
+)
+
 type Server struct {
 	Config              *config.Config
 	Logger              *logrus.Logger
@@ -70,6 +74,13 @@ func (server *Server) loadConfig(path string) error {
 }
 
 func (server *Server) initLogger(logger *logrus.Logger) error {
+	if _, err := os.Stat(LOGS_DIR); os.IsNotExist(err) {
+		err = os.MkdirAll(LOGS_DIR, 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	file, err := os.OpenFile(server.Config.ServerLogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -79,6 +90,7 @@ func (server *Server) initLogger(logger *logrus.Logger) error {
 	logger.SetOutput(file)
 
 	server.Logger = logger
+
 	return nil
 }
 
