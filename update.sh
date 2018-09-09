@@ -1,6 +1,6 @@
 #!/bin/bash   
 
-echo 'Downloadling dep...'
+echo 'Downloading dep...'
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 # rm -rf ./vendor

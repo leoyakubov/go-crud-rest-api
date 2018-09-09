@@ -49,7 +49,7 @@ sh start.sh
 The server will start up on 4000 port, Task API available at [http://localhost:4000/api/tasks](http://localhost:4000/api/tasks)
 
 ### Update libraries (optional)
-To install Glide and update libraries in ./vendor directory, run:
+To install dep and update libraries in ./vendor directory, run:
 ```
 sh update.sh
 ```
