@@ -1,8 +1,12 @@
 #!/bin/bash   
 
-echo 'Downloadling Glide...'
-curl https://glide.sh/get | sh
+echo 'Downloadling dep...'
+curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
 # rm -rf ./vendor
 
+echo 'Checking dependencies...'
+dep check
+
 echo 'Updating all dependencies...'
-glide update
+dep ensure -update

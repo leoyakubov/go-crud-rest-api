@@ -17,7 +17,28 @@ var DefaultTableNameHandler = func(db *DB, defaultTableName string) string {
 	return defaultTableName
 }
 
-var modelStructsMap sync.Map
+type safeModelStructsMap struct {
+	m map[reflect.Type]*ModelStruct
+	l *sync.RWMutex
+}
+
+func (s *safeModelStructsMap) Set(key reflect.Type, value *ModelStruct) {
+	s.l.Lock()
+	defer s.l.Unlock()
+	s.m[key] = value
+}
+
+func (s *safeModelStructsMap) Get(key reflect.Type) *ModelStruct {
+	s.l.RLock()
+	defer s.l.RUnlock()
+	return s.m[key]
+}
+
+func newModelStructsMap() *safeModelStructsMap {
+	return &safeModelStructsMap{l: new(sync.RWMutex), m: make(map[reflect.Type]*ModelStruct)}
+}
+
+var modelStructsMap = newModelStructsMap()
 
 // ModelStruct model definition
 type ModelStruct struct {
@@ -27,7 +48,7 @@ type ModelStruct struct {
 	defaultTableName string
 }
 
-// TableName returns model's table name
+// TableName get model's table name
 func (s *ModelStruct) TableName(db *DB) string {
 	if s.defaultTableName == "" && db != nil && s.ModelType != nil {
 		// Set default table name
@@ -131,8 +152,8 @@ func (scope *Scope) GetModelStruct() *ModelStruct {
 	}
 
 	// Get Cached model struct
-	if value, ok := modelStructsMap.Load(reflectType); ok && value != nil {
-		return value.(*ModelStruct)
+	if value := modelStructsMap.Get(reflectType); value != nil {
+		return value
 	}
 
 	modelStruct.ModelType = reflectType
@@ -580,7 +601,7 @@ func (scope *Scope) GetModelStruct() *ModelStruct {
 		}
 	}
 
-	modelStructsMap.Store(reflectType, &modelStruct)
+	modelStructsMap.Set(reflectType, &modelStruct)
 
 	return &modelStruct
 }

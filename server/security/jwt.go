@@ -2,9 +2,10 @@ package security
 
 import (
 	"fmt"
-	"github.com/leoyakubov/go-crud-rest-api/server/response"
 	"net/http"
 	"reflect"
+
+	"github.com/leoyakubov/go-crud-rest-api/server/response"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -52,9 +53,6 @@ func JwtAuthHandler(config middleware.JWTConfig) echo.MiddlewareFunc {
 			if err == nil && token.Valid {
 				// Store user information from token into context.
 				c.Set(config.ContextKey, token)
-				if config.SuccessHandler != nil {
-					config.SuccessHandler(c)
-				}
 
 				return next(c)
 			}

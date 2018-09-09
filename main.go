@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/leoyakubov/go-crud-rest-api/server/core"
 
 	"github.com/Sirupsen/logrus"

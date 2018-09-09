@@ -2,11 +2,12 @@ package core
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/leoyakubov/go-crud-rest-api/server/config"
 	"github.com/leoyakubov/go-crud-rest-api/server/repository"
 	"github.com/leoyakubov/go-crud-rest-api/server/security"
-	"net/http"
-	"os"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/sessions"

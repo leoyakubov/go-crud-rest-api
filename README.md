@@ -10,7 +10,7 @@
 - Added custom logging of each request including status code with [logrus](https://github.com/sirupsen/logrus).
 - Added scripts for DB migrations with [Goose](https://github.com/pressly/goose) library.
 - Configured daemon over simple YAML config. File path is specified as process flag for daemon. Required params: ListenAddress, DatabaseUri.
- - Used vendoring with [Glide](https://github.com/Masterminds/glide).
+ - Used vendoring with [dep](https://github.com/golang/dep).
 
 ### Task 
 ```
@@ -58,9 +58,9 @@ sh update.sh
 - Server configuration is stored in YAML file (conf/application.yaml) - we must provide `-config` flag to start a service.
 - Added universal CRUD repository, which incapsulates common db operations, any other repository (including task repository) uses it for CRUD operations.
 - BaseModel struct contains common fields for all models (includong Task).
-- Added custom logger as a middleware in server/config package, server logs a written to ./logs/server.log
+- Added custom logger as a middleware in server/config package, server logs are written to ./logs/server.log
 - Login controller checks creadentials as form values - for simplicity user name and password are hardcoded:
   **demouser** / **demopassword**
 - JWT token is stored in session context (Echo).
-- For simplicity all configuaration values are put into one config struct.
+- For simplicity all configuration values are put into one config struct.
 - Only dev environemt is supported, but we can user Viper or similar tool to load environment specific configuration (e.g. to build service for staging/prod etc).
