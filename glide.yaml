@@ -1,4 +1,4 @@
-package: go-crud-rest-api
+package: github.com/leoyakubov/go-crud-rest-api
 import:
 - package: github.com/JonathanMH/goClacks
   subpackages:

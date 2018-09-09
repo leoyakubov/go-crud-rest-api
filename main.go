@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"go-crud-rest-api/server/core"
+	"github.com/leoyakubov/go-crud-rest-api/server/core"
 
 	"github.com/Sirupsen/logrus"
 )

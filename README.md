@@ -1,4 +1,4 @@
-# go-crud-rest-api #
+# go-crud-rest-api
 
 ## Description
 - Implemented create/read/read all/update/delete endpoints for Task object, used [Echo](https://github.com/labstack/echo) as a web framework.
@@ -55,7 +55,6 @@ sh update.sh
 ```
 
 ## Notes
-- All application layers are separated in a corresponding packages.
 - Server configuration is stored in YAML file (conf/application.yaml) - we must provide `-config` flag to start a service.
 - Added universal CRUD repository, which incapsulates common db operations, any other repository (including task repository) uses it for CRUD operations.
 - BaseModel struct contains common fields for all models (includong Task).
@@ -63,6 +62,5 @@ sh update.sh
 - Login controller checks creadentials as form values - for simplicity user name and password are hardcoded:
   **demouser** / **demopassword**
 - JWT token is stored in session context (Echo).
-- A method to transform DTO to model could be added to avoid copy-pasting in controller.
 - For simplicity all configuaration values are put into one config struct.
 - Only dev environemt is supported, but we can user Viper or similar tool to load environment specific configuration (e.g. to build service for staging/prod etc).

@@ -2,7 +2,7 @@ package security
 
 import (
 	"fmt"
-	"go-crud-rest-api/server/response"
+	"github.com/leoyakubov/go-crud-rest-api/server/response"
 	"net/http"
 	"reflect"
 

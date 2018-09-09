@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"go-crud-rest-api/server/response"
+	"github.com/leoyakubov/go-crud-rest-api/server/response"
 	"net/http"
 	"time"
 

@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"go-crud-rest-api/server/config"
-	"go-crud-rest-api/server/repository"
+	"github.com/leoyakubov/go-crud-rest-api/server/config"
+	"github.com/leoyakubov/go-crud-rest-api/server/repository"
 )
 
 type BaseController struct {

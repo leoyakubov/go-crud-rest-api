@@ -1,5 +1,5 @@
-hash: 4ded6cfecc7e0b43750f192da677640ac6d2dccff7f5e9915083a35548b36467
-updated: 2018-09-08T23:41:12.33409+03:00
+hash: 52292fdeb2a380bfdf207f4fa02280c49ef3a9b74d798b0c0cec821a7d61eda6
+updated: 2018-09-09T21:15:50.535918+03:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: 0b96aaa707760d6ab28d9b9d1913ff5993328bae
@@ -69,7 +69,7 @@ imports:
   subpackages:
   - internal
 - name: golang.org/x/sys
-  version: 917fdcba135dcbaccd57425db91723541b4427c8
+  version: d0be0721c37eeb5299f245a996a483160fc36940
   subpackages:
   - unix
   - windows

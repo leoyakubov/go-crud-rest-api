@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"go-crud-rest-api/server/model"
+	"github.com/leoyakubov/go-crud-rest-api/server/model"
 )
 
 type ITaskRepository interface {

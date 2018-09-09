@@ -2,9 +2,9 @@ package core
 
 import (
 	"fmt"
-	"go-crud-rest-api/server/config"
-	"go-crud-rest-api/server/repository"
-	"go-crud-rest-api/server/security"
+	"github.com/leoyakubov/go-crud-rest-api/server/config"
+	"github.com/leoyakubov/go-crud-rest-api/server/repository"
+	"github.com/leoyakubov/go-crud-rest-api/server/security"
 	"net/http"
 	"os"
 

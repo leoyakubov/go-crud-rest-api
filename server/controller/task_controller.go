@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"go-crud-rest-api/server/dto"
-	"go-crud-rest-api/server/model"
-	"go-crud-rest-api/server/response"
+	"github.com/leoyakubov/go-crud-rest-api/server/dto"
+	"github.com/leoyakubov/go-crud-rest-api/server/model"
+	"github.com/leoyakubov/go-crud-rest-api/server/response"
 	"net/http"
 	"strconv"
 

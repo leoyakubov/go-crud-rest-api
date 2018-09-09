@@ -2,7 +2,7 @@ package repository
 
 import (
 	"fmt"
-	"go-crud-rest-api/server/config"
+	"github.com/leoyakubov/go-crud-rest-api/server/config"
 
 	"github.com/jinzhu/gorm"
 )

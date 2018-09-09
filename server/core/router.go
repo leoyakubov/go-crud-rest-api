@@ -1,8 +1,8 @@
 package core
 
 import (
-	"go-crud-rest-api/server/controller"
-	"go-crud-rest-api/server/security"
+	"github.com/leoyakubov/go-crud-rest-api/server/controller"
+	"github.com/leoyakubov/go-crud-rest-api/server/security"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/middleware"
