@@ -10,7 +10,7 @@ import (
 )
 
 // Meddleware for custom logging
-func CustomLoggerHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc {
+func CustomLoggingHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			start := time.Now()

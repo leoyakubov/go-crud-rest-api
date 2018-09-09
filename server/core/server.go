@@ -112,7 +112,7 @@ func (server *Server) initWebserver() error {
 }
 
 func (server *Server) setMiddleware() error {
-	server.Webserver.Use(config.CustomLoggerHandler("web", server.Logger))
+	server.Webserver.Use(config.CustomLoggingHandler("web", server.Logger))
 	server.Webserver.Use(middleware.Recover())
 	server.Webserver.Use(security.CORS())
 
@@ -130,6 +130,8 @@ func (server *Server) initOAuth() {
 		return "facebook", nil
 	}
 
+	//NOTE We should inject our own cookie store, gothic returns
+	// "no SESSION_SECRET environment variable is set." with default one
 	gothic.Store = sessions.NewCookieStore([]byte(server.Config.FbSecret))
 }
 

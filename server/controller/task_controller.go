@@ -55,7 +55,6 @@ func (tc *TaskController) AddTask(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, tm)
-
 }
 
 func (bc *BaseController) GetTaskById(c echo.Context) error {
@@ -182,7 +181,6 @@ func (bc *BaseController) DeleteTask(c echo.Context) error {
 			ServerError: err.Error(),
 			UserMessage: response.TASK_DOESNT_EXIST,
 		})
-
 	}
 
 	if err != nil {
