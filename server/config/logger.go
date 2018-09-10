@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
+	"github.com/sirupsen/logrus"
 )
 
-// Meddleware for custom logging
+// Middleware for custom logging
 func CustomLoggingHandler(name string, logger *logrus.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

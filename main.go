@@ -5,7 +5,7 @@ import (
 
 	"github.com/leoyakubov/go-crud-rest-api/server/core"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

@@ -9,12 +9,12 @@ import (
 	"github.com/leoyakubov/go-crud-rest-api/server/repository"
 	"github.com/leoyakubov/go-crud-rest-api/server/security"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/sessions"
 	"github.com/jinzhu/gorm"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/facebook"
+	"github.com/sirupsen/logrus"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
