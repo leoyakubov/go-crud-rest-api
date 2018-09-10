@@ -106,6 +106,23 @@
   version = "0.2.6"
 
 [[projects]]
+  branch = "master"
+  digest = "1:a9f9efae9a8f6aad979cd0044f871211bfd01cb36e4ffa2d487eab11abdfcc17"
+  name = "github.com/leoyakubov/go-crud-rest-api"
+  packages = [
+    "server/config",
+    "server/controller",
+    "server/core",
+    "server/dto",
+    "server/model",
+    "server/repository",
+    "server/response",
+    "server/security",
+  ]
+  pruneopts = "UT"
+  revision = "5c5f9bf001086fbb5e5e8907548169067f21b535"
+
+[[projects]]
   digest = "1:485b43174a290daba4e3680fe305ef85919c4e80f8311eb8d2351b73fa28315a"
   name = "github.com/markbates/goth"
   packages = [
@@ -230,6 +247,14 @@
     "github.com/jinzhu/gorm",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
+    "github.com/leoyakubov/go-crud-rest-api/server/config",
+    "github.com/leoyakubov/go-crud-rest-api/server/controller",
+    "github.com/leoyakubov/go-crud-rest-api/server/core",
+    "github.com/leoyakubov/go-crud-rest-api/server/dto",
+    "github.com/leoyakubov/go-crud-rest-api/server/model",
+    "github.com/leoyakubov/go-crud-rest-api/server/repository",
+    "github.com/leoyakubov/go-crud-rest-api/server/response",
+    "github.com/leoyakubov/go-crud-rest-api/server/security",
     "github.com/markbates/goth",
     "github.com/markbates/goth/gothic",
     "github.com/markbates/goth/providers/facebook",
